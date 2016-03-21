@@ -101,6 +101,7 @@ unsigned char NextState;
 
 unsigned int MaxCapacity;			// Cable limit (Amps)(limited by the wire in the charge cable, set automatically, or manually if Config=Fixed Cable)
 unsigned int Imeasured=0;			// Max of all CT inputs (Amps *10)
+unsigned int PVmeasured=0;                      //PV shunt measurement (expressed as amps@240VAC*10)
 int Iset=0;							// PWM output is set to this current level (Amps *10)
 
 unsigned char RX1byte;
@@ -408,6 +409,7 @@ unsigned int CalcCurrent()					// calculates PWM current (Amps x10)
 
 	if (Idifference>0) Iset+=(Idifference/2);			// increase with half of difference (slowly increase current)
 	else Iset+= Idifference;							// last PWM setting + difference (immediately decrease current)
+        if ((PVmeasured>=100)&&(PVmeasured<=Iset) Iset=PVmeasured;      //minimum 10amp charge from PV
 
 	if((Iset< 0) || (Iset<60) ) Iset=60;				// minimal 6A charge
     if(Iset> (MaxCurrent*10)) Iset=(MaxCurrent*10);		// limit to Max Current (set by user)
